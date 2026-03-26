@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BUILT Lab — AI for the Built Environment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d0e0f; --bg2:#111315; --bg3:#181b1e;
+  --orange:#f97316; --orange2:#fb923c; --yellow:#fbbf24;
+  --steel:#94a3b8; --steeldk:#475569;
+  --text:#f1f5f9; --textdim:#94a3b8;
+  --border:rgba(255,255,255,0.07); --border2:rgba(249,115,22,0.22);
+  --card:rgba(255,255,255,0.025); --cardhov:rgba(249,115,22,0.05);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(249,115,22,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,0.04) 1px,transparent 1px),linear-gradient(rgba(249,115,22,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,0.012) 1px,transparent 1px);
+  background-size:80px 80px,80px 80px,20px 20px,20px 20px;
+  pointer-events:none;z-index:0;
+}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:60px;background:rgba(13,14,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;gap:0.6rem;cursor:pointer;text-decoration:none}
+.nav-mark{width:28px;height:28px;background:var(--orange);clip-path:polygon(0 100%,50% 0,100% 100%);flex-shrink:0}
+.nav-wordmark{font-family:'Bebas Neue',sans-serif;font-size:1.45rem;letter-spacing:0.12em;color:var(--text);line-height:1}
+.nav-wordmark span{color:var(--orange)}
+.nav-links{display:flex;gap:0;list-style:none}
+.nav-links li a{display:block;padding:0.4rem 0.85rem;font-family:'JetBrains Mono',monospace;font-size:0.67rem;font-weight:400;text-transform:uppercase;letter-spacing:0.1em;color:var(--steeldk);text-decoration:none;border-radius:4px;transition:color 0.2s,background 0.2s;cursor:pointer}
+.nav-links li a:hover,.nav-links li a.active{color:var(--orange);background:rgba(249,115,22,0.08)}
+.nav-pill{font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--steeldk);border:1px solid var(--border);padding:0.2rem 0.6rem;border-radius:2px}
+
+/* SECTIONS */
+.section{display:none;position:relative;z-index:1}
+.section.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.section.active .hero,.section.active .page-header,.section.active .stats-row,.section.active .content{animation:fadeUp 0.42s ease both}
+.section.active .stats-row{animation-delay:.08s}
+.section.active .content{animation-delay:.14s}
+
+/* BTN */
+.btn{display:inline-flex;align-items:center;gap:0.45rem;padding:0.7rem 1.55rem;border-radius:3px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:600;letter-spacing:0.04em;text-decoration:none;cursor:pointer;border:none;transition:all 0.2s}
+.btn-primary{background:var(--orange);color:#0d0e0f}
+.btn-primary:hover{background:var(--orange2);box-shadow:0 0 22px rgba(249,115,22,0.3)}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange)}
+
+/* HERO */
+.hero{min-height:100vh;padding:7rem 2.5rem 3rem;display:grid;grid-template-columns:1fr 400px;gap:4rem;align-items:center;max-width:1400px;margin:0 auto}
+.hero-overline{display:flex;align-items:center;gap:0.75rem;font-family:'JetBrains Mono',monospace;font-size:0.67rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--orange);margin-bottom:1.4rem}
+.hero-overline::before{content:'';width:2rem;height:1px;background:var(--orange)}
+h1.ht{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,9vw,8rem);line-height:0.92;letter-spacing:0.03em;margin-bottom:0.5rem}
+h1.ht .ac{color:var(--orange);display:block}
+h1.ht .sub{font-family:'Syne',sans-serif;font-size:clamp(0.95rem,1.8vw,1.2rem);font-weight:500;letter-spacing:0.01em;color:var(--textdim);display:block;margin-top:0.8rem;line-height:1.5}
+.hero-desc{max-width:520px;font-size:0.92rem;font-weight:400;line-height:1.8;color:var(--textdim);margin:1.6rem 0 2.1rem}
+.hero-cta{display:flex;gap:0.85rem;flex-wrap:wrap}
+
+/* HERO PANELS */
+.hero-right{display:flex;flex-direction:column;gap:1rem}
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:1.5rem;position:relative;overflow:hidden}
+.panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--orange),transparent)}
+.panel-label{font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.16em;color:var(--orange);margin-bottom:0.9rem}
+.topic-list{display:flex;flex-direction:column;gap:0.4rem}
+.topic{display:flex;align-items:center;gap:0.6rem;font-size:0.83rem;font-weight:500;color:var(--textdim);padding:0.45rem 0.6rem;border-radius:4px;border:1px solid transparent;transition:all 0.2s}
+.topic:hover{background:rgba(249,115,22,0.06);border-color:var(--border2);color:var(--text)}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;opacity:0.55}
+.topic:hover .dot{opacity:1}
+.status-row{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--textdim);line-height:1.85}
+
+/* STATS */
+.stats-row{display:flex;gap:0;border:1px solid var(--border);border-radius:6px;overflow:hidden;max-width:1400px;margin:0 2.5rem}
+.stat{flex:1;padding:1.35rem 1.6rem;border-right:1px solid var(--border);background:var(--card);text-align:center}
+.stat:last-child{border-right:none}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:2.3rem;color:var(--orange);line-height:1;margin-bottom:0.25rem;letter-spacing:0.04em}
+.stat-l{font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--steeldk)}
+
+/* PAGE HEADER */
+.page-header{padding:6.5rem 2.5rem 2.5rem;border-bottom:1px solid var(--border);max-width:1400px;margin:0 auto;position:relative;overflow:hidden}
+.page-header::after{content:'BUILT LAB';font-family:'Bebas Neue',sans-serif;font-size:9rem;letter-spacing:0.04em;color:rgba(249,115,22,0.04);position:absolute;right:1.5rem;bottom:-1.5rem;line-height:1;pointer-events:none}
+.pg-tag{font-family:'JetBrains Mono',monospace;font-size:0.63rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--orange);margin-bottom:0.9rem}
+.pg-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,5rem);letter-spacing:0.04em;line-height:1;margin-bottom:0.7rem}
+.pg-sub{color:var(--textdim);font-size:0.9rem;max-width:500px;line-height:1.7;font-weight:400}
+
+/* CONTENT */
+.content{padding:3rem 2.5rem;max-width:1400px;margin:0 auto}
+.sec-hd{display:flex;align-items:center;gap:1rem;margin-bottom:1.75rem}
+.sec-hd h2{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:0.08em;white-space:nowrap}
+.sec-hd::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* CARDS */
+.g2{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:1.2rem}
+.g3{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.2rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.5rem;transition:background 0.2s,border-color 0.2s,transform 0.2s}
+.card:hover{background:var(--cardhov);border-color:var(--border2);transform:translateY(-2px)}
+.ctag{font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--orange);background:rgba(249,115,22,0.08);display:inline-block;padding:0.17rem 0.52rem;border-radius:2px;margin-bottom:0.75rem}
+.card h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.5rem;line-height:1.3}
+.card p{font-size:0.83rem;color:var(--textdim);line-height:1.68;font-weight:400}
+.card-meta{margin-top:1rem;padding-top:0.85rem;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--steeldk);display:flex;gap:0.8rem;flex-wrap:wrap}
+
+/* AREA CARD */
+.ac2{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:1.6rem;transition:all 0.25s;position:relative;overflow:hidden}
+.ac2::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--orange),transparent);transform:scaleX(0);transform-origin:left;transition:transform 0.3s}
+.ac2:hover::after{transform:scaleX(1)}
+.ac2:hover{border-color:var(--border2);transform:translateY(-3px)}
+.ac2-num{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:rgba(249,115,22,0.1);line-height:1;margin-bottom:0.45rem;letter-spacing:0.05em}
+.ac2 h3{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;margin-bottom:0.45rem;line-height:1.3}
+.ac2 p{font-size:0.81rem;color:var(--textdim);line-height:1.65}
+
+/* PUBS */
+.pub-list{display:flex;flex-direction:column;gap:1rem}
+.pub-item{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.4rem;display:flex;gap:1.4rem;align-items:flex-start;transition:all 0.2s}
+.pub-item:hover{background:var(--cardhov);border-color:var(--border2)}
+.pub-yr{font-family:'JetBrains Mono',monospace;font-size:0.76rem;color:var(--orange);min-width:38px;padding-top:0.1rem;font-weight:500}
+.pub-body h3{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;margin-bottom:0.28rem;line-height:1.35}
+.pub-authors{font-size:0.78rem;color:var(--steeldk);margin-bottom:0.3rem;font-weight:400}
+.pub-venue{font-family:'JetBrains Mono',monospace;font-size:0.63rem;color:var(--orange2);letter-spacing:0.03em}
+.pub-links{display:flex;gap:0.4rem;margin-top:0.65rem;flex-wrap:wrap}
+.pub-link{font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.08em;padding:0.18rem 0.58rem;border-radius:2px;border:1px solid var(--border);color:var(--steeldk);cursor:pointer;transition:all 0.15s;text-decoration:none}
+.pub-link:hover{border-color:var(--orange);color:var(--orange)}
+
+/* TEAM */
+.tc{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:1.5rem;transition:all 0.2s;display:flex;flex-direction:column;gap:0.9rem}
+.tc:hover{border-color:var(--border2);transform:translateY(-2px)}
+.avatar{width:56px;height:56px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.35rem;color:#0d0e0f;letter-spacing:0.04em;flex-shrink:0}
+.av1{background:linear-gradient(135deg,var(--orange),var(--yellow))}
+.av2{background:linear-gradient(135deg,#f43f5e,var(--orange))}
+.av3{background:linear-gradient(135deg,#8b5cf6,#3b82f6)}
+.av4{background:linear-gradient(135deg,#10b981,#06b6d4)}
+.av5{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.av6{background:linear-gradient(135deg,#6366f1,#c084fc)}
+.tname{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;margin-bottom:0.13rem}
+.trole{font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--orange)}
+.tbio{font-size:0.81rem;color:var(--textdim);line-height:1.65;font-weight:400}
+.tag-list{display:flex;flex-wrap:wrap;gap:0.3rem}
+.tag{font-family:'JetBrains Mono',monospace;font-size:0.56rem;padding:0.15rem 0.48rem;border-radius:2px;background:rgba(249,115,22,0.07);color:var(--orange2);border:1px solid rgba(249,115,22,0.14)}
+
+/* NEWS */
+.news-item{display:grid;grid-template-columns:76px 1fr;gap:1.4rem;padding:1.4rem 0;border-bottom:1px solid var(--border)}
+.ndate{text-align:center;padding-top:0.1rem}
+.nday{font-family:'Bebas Neue',sans-serif;font-size:2.1rem;color:var(--orange);line-height:1;letter-spacing:0.04em}
+.nmo{font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--steeldk)}
+.nbadge{display:inline-block;margin-bottom:0.38rem;font-family:'JetBrains Mono',monospace;font-size:0.56rem;text-transform:uppercase;letter-spacing:0.1em;padding:0.14rem 0.48rem;border-radius:2px;background:rgba(249,115,22,0.09);color:var(--orange);border:1px solid rgba(249,115,22,0.18)}
+.ntitle{font-family:'Syne',sans-serif;font-size:0.97rem;font-weight:700;margin-bottom:0.3rem;line-height:1.35}
+.ntext{font-size:0.83rem;color:var(--textdim);line-height:1.65;font-weight:400}
+
+/* CONTACT */
+.contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;max-width:880px}
+.ch3{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:1.15rem}
+.cl{display:flex;align-items:flex-start;gap:0.7rem;margin-bottom:0.85rem}
+.ci{width:30px;height:30px;border-radius:4px;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.14);display:flex;align-items:center;justify-content:center;font-size:0.82rem;flex-shrink:0}
+.cinfo{font-size:0.83rem;color:var(--textdim);line-height:1.5;font-weight:400}
+.cinfo strong{display:block;color:var(--text);font-size:0.62rem;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.12rem;font-weight:400}
+.fg{margin-bottom:0.85rem}
+.fg label{display:block;font-family:'JetBrains Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--steeldk);margin-bottom:0.38rem}
+.fg input,.fg textarea{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:0.58rem 0.8rem;color:var(--text);font-family:'Syne',sans-serif;font-size:0.87rem;font-weight:400;outline:none;transition:border-color 0.2s;resize:vertical}
+.fg input:focus,.fg textarea:focus{border-color:var(--orange)}
+.fg textarea{min-height:95px}
+
+/* FOOTER */
+footer{margin-top:5rem;border-top:1px solid var(--border);padding:1.6rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;position:relative;z-index:1}
+.fl{font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:0.12em;color:var(--steeldk)}
+.fl span{color:var(--orange)}
+.fr{font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--steeldk);letter-spacing:0.05em}
+
+/* RESPONSIVE */
+@media(max-width:900px){.hero{grid-template-columns:1fr;gap:2.5rem;padding-top:6rem}}
+@media(max-width:768px){
+  nav{padding:0 1.25rem}
+  .nav-links li a{padding:0.35rem 0.5rem;font-size:0.6rem}
+  .nav-pill{display:none}
+  .stats-row{flex-wrap:wrap;margin:0 1.5rem}
+  .stat{border-right:none;border-bottom:1px solid var(--border)}
+  .content{padding:2rem 1.5rem}
+  .page-header{padding:5.5rem 1.5rem 2rem}
+  footer{padding:1.4rem 1.5rem}
+  .contact-wrap{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" onclick="show('home')">
+    <div class="nav-mark"></div>
+    <div class="nav-wordmark">BUILT<span> LAB</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a onclick="show('home')"         id="nav-home"         class="active">Home</a></li>
+    <li><a onclick="show('research')"     id="nav-research">Research</a></li>
+    <li><a onclick="show('publications')" id="nav-publications">Publications</a></li>
+    <li><a onclick="show('team')"         id="nav-team">Team</a></li>
+    <li><a onclick="show('news')"         id="nav-news">News</a></li>
+    <li><a onclick="show('contact')"      id="nav-contact">Contact</a></li>
+  </ul>
+  <div class="nav-pill">AI · BUILT ENVIRONMENT</div>
+</nav>
+
+<!-- ════════ HOME ════════ -->
+<section class="section active" id="home">
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-overline">Research Lab · Civil &amp; Construction Engineering</div>
+      <h1 class="ht">
+        BUILT
+        <span class="ac">ENVIRONMENT</span>
+        <span class="sub">Intelligent Systems &amp; AI Research Lab</span>
+      </h1>
+      <p class="hero-desc">
+        The BUILT Lab advances AI-driven research for construction, infrastructure, and the built environment — spanning Extended Reality, Digital Twins, Edge AI, Multimodal LLMs, AI for Construction Education, Human–Building Interaction, and Human–Robot Collaboration on job sites.
+      </p>
+      <div class="hero-cta">
+        <button class="btn btn-primary" onclick="show('research')">Explore Research →</button>
+        <button class="btn btn-ghost"   onclick="show('publications')">Publications</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="panel">
+        <div class="panel-label">// Core Research Themes</div>
+        <div class="topic-list">
+          <div class="topic"><div class="dot"></div>XR / Extended Reality for Construction</div>
+          <div class="topic"><div class="dot"></div>AI for Construction Education</div>
+          <div class="topic"><div class="dot"></div>Human–Building Interaction</div>
+          <div class="topic"><div class="dot"></div>Digital Twins &amp; BIM Intelligence</div>
+          <div class="topic"><div class="dot"></div>Edge AI &amp; On-Site Sensing</div>
+          <div class="topic"><div class="dot"></div>Multimodal LLMs for AEC</div>
+          <div class="topic"><div class="dot"></div>Human–Robot Collaboration with LLMs</div>
+        </div>
+      </div>
+      <div class="panel" style="background:rgba(249,115,22,0.05);border-color:rgba(249,115,22,0.18)">
+        <div class="panel-label">// Lab Status</div>
+        <div class="status-row">
+          <span style="color:var(--orange)">●</span>&nbsp; Accepting PhD applicants — Fall 2025<br>
+          <span style="color:#22c55e">●</span>&nbsp; 4 active funded projects<br>
+          <span style="color:#3b82f6">●</span>&nbsp; Partnered with 6 industry collaborators
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-n">32</div><div class="stat-l">Publications</div></div>
+    <div class="stat"><div class="stat-n">9</div><div class="stat-l">Researchers</div></div>
+    <div class="stat"><div class="stat-n">7</div><div class="stat-l">Focus Areas</div></div>
+    <div class="stat"><div class="stat-n">4</div><div class="stat-l">Active Projects</div></div>
+    <div class="stat"><div class="stat-n">$1.8M</div><div class="stat-l">Funding</div></div>
+  </div>
+
+  <div class="content">
+    <div class="sec-hd" style="margin-top:2.5rem"><h2>Featured Projects</h2></div>
+    <div class="g2" style="margin-bottom:3rem">
+      <div class="card">
+        <div class="ctag">Active · XR + LLM</div>
+        <h3>Immersive Safety Training with XR &amp; Generative AI</h3>
+        <p>Combining AR/VR headsets with LLM-generated adaptive hazard scenarios for on-site safety training in dynamic construction environments.</p>
+        <div class="card-meta"><span>PI: Dr. [Your Name]</span><span>NSF funded</span><span>3 researchers</span></div>
+      </div>
+      <div class="card">
+        <div class="ctag">Active · Digital Twin</div>
+        <h3>Real-Time Edge AI Digital Twin for Infrastructure</h3>
+        <p>Lightweight neural networks on IoT edge nodes synchronizing physical structure states with BIM-integrated living digital twin models.</p>
+        <div class="card-meta"><span>PI: Dr. [Your Name]</span><span>DOT funded</span><span>4 researchers</span></div>
+      </div>
+      <div class="card">
+        <div class="ctag">Active · HRI + LLM</div>
+        <h3>LLM-Enabled Human–Robot Collaboration on Job Sites</h3>
+        <p>Natural-language task delegation between skilled tradespeople and semi-autonomous construction robots using multimodal large language models.</p>
+        <div class="card-meta"><span>PI: Dr. [Your Name]</span><span>Industry grant</span><span>3 researchers</span></div>
+      </div>
+      <div class="card">
+        <div class="ctag">Active · AI Education</div>
+        <h3>Adaptive AI Tutoring for Construction Engineering Curricula</h3>
+        <p>Multimodal LLM tutors that adapt to individual learning trajectories across scheduling, estimating, and safety courses for AEC students.</p>
+        <div class="card-meta"><span>PI: Dr. [Your Name]</span><span>DoE funded</span><span>2 researchers</span></div>
+      </div>
+    </div>
+
+    <div class="sec-hd"><h2>Research Areas</h2></div>
+    <div class="g3">
+      <div class="ac2"><div class="ac2-num">01</div><h3>XR for Construction</h3><p>AR/VR for safety, training, remote inspection, and design review in AEC workflows.</p></div>
+      <div class="ac2"><div class="ac2-num">02</div><h3>AI for Construction Education</h3><p>Adaptive learning systems, simulation-based training, and LLM tutors for engineering programs.</p></div>
+      <div class="ac2"><div class="ac2-num">03</div><h3>Human–Building Interaction</h3><p>Sensing and modeling how people interact with built spaces to optimize adaptive building controls.</p></div>
+      <div class="ac2"><div class="ac2-num">04</div><h3>Digital Twins</h3><p>BIM-linked real-time digital twins with AI-driven anomaly detection and lifecycle optimization.</p></div>
+      <div class="ac2"><div class="ac2-num">05</div><h3>Edge AI &amp; Sensing</h3><p>On-site AI inference on edge hardware for worker safety, material tracking, and progress detection.</p></div>
+      <div class="ac2"><div class="ac2-num">06</div><h3>Multimodal LLMs for AEC</h3><p>Vision-language models for plan interpretation, spec Q&amp;A, and project risk analysis.</p></div>
+      <div class="ac2"><div class="ac2-num">07</div><h3>Human–Robot Collaboration</h3><p>LLM-grounded task planning for autonomous robots operating alongside construction workers.</p></div>
+    </div>
+  </div>
+  <footer><div class="fl"><span>BUILT</span> LAB · [Your University]</div><div class="fr">© 2024 BUILT Lab — AI for the Built Environment</div></footer>
+</section>
+
+<!-- ════════ RESEARCH ════════ -->
+<section class="section" id="research">
+  <div class="page-header">
+    <div class="pg-tag">// 02 — Research</div>
+    <div class="pg-title">Areas &amp; Projects</div>
+    <p class="pg-sub">Seven interconnected research thrusts making the built environment safer, smarter, and more human-centered.</p>
+  </div>
+  <div class="content">
+    <div class="sec-hd"><h2>Active Projects</h2></div>
+    <div class="g2" style="margin-bottom:3rem">
+      <div class="card">
+        <div class="ctag">Active · NSF #2401234</div>
+        <h3>Immersive XR Safety Training with Adaptive LLM Scenarios</h3>
+        <p>AR/VR environments powered by generative AI that dynamically adjust hazard complexity based on trainee performance, validated on live construction sites.</p>
+        <div class="card-meta"><span>2023–2026</span><span>$520K</span><span>3 members</span></div>
+      </div>
+      <div class="card">
+        <div class="ctag">Active · DOT #RD-2023</div>
+        <h3>Edge AI Digital Twin for Bridge Structural Health Monitoring</h3>
+        <p>Lightweight transformer models on Raspberry Pi edge nodes detecting structural anomalies and feeding a live BIM-integrated digital twin.</p>
+        <div class="card-meta"><span>2022–2025</span><span>$650K</span><span>4 members</span></div>
+      </div>
+      <div class="card">
+        <div class="ctag">Active · Industry</div>
+        <h3>Multimodal LLM for Construction Site Human–Robot Task Delegation</h3>
+        <p>GPT-4V-based system enabling natural language and gesture commands from workers to semi-autonomous bricklaying and material-handling robots.</p>
+        <div class="card-meta"><span>2024–2025</span><span>$310K</span><span>3 members</span></div>
+      </div>
+      <div class="card">
+        <div class="ctag">Active · DoE</div>
+        <h3>AI-Powered Adaptive Tutoring for Construction Engineering Education</h3>
+        <p>Multimodal LLM-driven tutoring that personalizes course delivery across scheduling, estimating, and safety curricula for undergraduate AEC students.</p>
+        <div class="card-meta"><span>2023–2025</span><span>$280K</span><span>2 members</span></div>
+      </div>
+      <div class="card">
+        <div class="ctag">Active · NSF #2312456</div>
+        <h3>Human–Building Interaction Modeling with Computer Vision</h3>
+        <p>Multi-camera CV and occupancy sensing to model how users adapt to spatial affordances, informing adaptive HVAC and lighting control.</p>
+        <div class="card-meta"><span>2023–2026</span><span>$420K</span><span>3 members</span></div>
+      </div>
+      <div class="card">
+        <div class="ctag">Completed · 2023</div>
+        <h3>AR-Assisted Concrete Inspection for Bridge Decks</h3>
+        <p>HoloLens 2 overlay guiding inspectors through AASHTO protocols with real-time defect annotation and cloud-synced reporting.</p>
+        <div class="card-meta"><span>2021–2023</span><span>$190K</span><span>2 members</span></div>
+      </div>
+    </div>
+    <div class="sec-hd"><h2>Partners &amp; Collaborators</h2></div>
+    <div class="g3">
+      <div class="card"><h3>Industry Partners</h3><p>Turner Construction, Trimble, Autodesk Research, Skanska Innovation Lab, Hilti, and Procore Technologies.</p></div>
+      <div class="card"><h3>Government Agencies</h3><p>National Science Foundation (NSF), U.S. Department of Transportation, Department of Energy, DARPA IXO.</p></div>
+      <div class="card"><h3>Academic Partners</h3><p>Georgia Tech CIBER Lab, MIT Media Lab, ETH Zürich Digital Building Technologies, Delft University of Technology.</p></div>
+    </div>
+  </div>
+  <footer><div class="fl"><span>BUILT</span> LAB · [Your University]</div><div class="fr">© 2024 BUILT Lab — AI for the Built Environment</div></footer>
+</section>
+
+<!-- ════════ PUBLICATIONS ════════ -->
+<section class="section" id="publications">
+  <div class="page-header">
+    <div class="pg-tag">// 03 — Publications</div>
+    <div class="pg-title">Papers &amp; Preprints</div>
+    <p class="pg-sub">Selected publications 2021–2024 in construction AI, XR, digital twins, and HRI. Full list on Google Scholar.</p>
+  </div>
+  <div class="content">
+    <div class="sec-hd"><h2>2024</h2></div>
+    <div class="pub-list" style="margin-bottom:2.5rem">
+      <div class="pub-item">
+        <div class="pub-yr">2024</div>
+        <div class="pub-body">
+          <h3>LLM-Grounded Task Planning for Human–Robot Collaboration in Unstructured Construction Sites</h3>
+          <div class="pub-authors">[Author A], [Author B], [Author C]</div>
+          <div class="pub-venue">Automation in Construction · Vol. 168</div>
+          <div class="pub-links"><a class="pub-link">PDF</a><a class="pub-link">DOI</a><a class="pub-link">Code</a><a class="pub-link">BibTeX</a></div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <div class="pub-yr">2024</div>
+        <div class="pub-body">
+          <h3>Multimodal Foundation Models for Construction Document Understanding and Risk Extraction</h3>
+          <div class="pub-authors">[Author A], [Author D]</div>
+          <div class="pub-venue">Journal of Construction Engineering and Management · ASCE</div>
+          <div class="pub-links"><a class="pub-link">PDF</a><a class="pub-link">arXiv</a><a class="pub-link">BibTeX</a></div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <div class="pub-yr">2024</div>
+        <div class="pub-body">
+          <h3>Real-Time Edge AI for Worker Proximity Hazard Detection on Active Construction Sites</h3>
+          <div class="pub-authors">[Author B], [Author E], [Author A]</div>
+          <div class="pub-venue">Safety Science · Vol. 172 · Best Paper Award</div>
+          <div class="pub-links"><a class="pub-link">PDF</a><a class="pub-link">Dataset</a><a class="pub-link">Video</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="sec-hd"><h2>2023</h2></div>
+    <div class="pub-list" style="margin-bottom:2.5rem">
+      <div class="pub-item">
+        <div class="pub-yr">2023</div>
+        <div class="pub-body">
+          <h3>Adaptive AR Training Environments for Construction Safety: A Randomized Controlled Trial</h3>
+          <div class="pub-authors">[Author A], [Author C], [Author F]</div>
+          <div class="pub-venue">Advanced Engineering Informatics · Vol. 58</div>
+          <div class="pub-links"><a class="pub-link">PDF</a><a class="pub-link">DOI</a><a class="pub-link">Data</a></div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <div class="pub-yr">2023</div>
+        <div class="pub-body">
+          <h3>BIM-Integrated Digital Twin with Physics-Informed Neural Networks for Structural Health Monitoring</h3>
+          <div class="pub-authors">[Author D], [Author E], [Author A]</div>
+          <div class="pub-venue">Engineering Structures · Vol. 295</div>
+          <div class="pub-links"><a class="pub-link">PDF</a><a class="pub-link">DOI</a></div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <div class="pub-yr">2023</div>
+        <div class="pub-body">
+          <h3>Measuring Cognitive Load in Construction Education via Multimodal Sensing and Transformer Models</h3>
+          <div class="pub-authors">[Author F], [Author A]</div>
+          <div class="pub-venue">Computers &amp; Education · Vol. 199</div>
+          <div class="pub-links"><a class="pub-link">PDF</a><a class="pub-link">arXiv</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="sec-hd"><h2>2021–2022</h2></div>
+    <div class="pub-list">
+      <div class="pub-item">
+        <div class="pub-yr">2022</div>
+        <div class="pub-body">
+          <h3>Occupant Behavior Modeling from Camera-Based Pose Estimation in Open-Plan Offices</h3>
+          <div class="pub-authors">[Author C], [Author A], [Author B]</div>
+          <div class="pub-venue">Building and Environment · Vol. 225</div>
+          <div class="pub-links"><a class="pub-link">PDF</a><a class="pub-link">DOI</a></div>
+        </div>
+      </div>
+      <div class="pub-item">
+        <div class="pub-yr">2021</div>
+        <div class="pub-body">
+          <h3>HoloLens-Assisted Concrete Bridge Deck Inspection: Field Validation and User Study</h3>
+          <div class="pub-authors">[Author A], [Author D]</div>
+          <div class="pub-venue">Journal of Bridge Engineering · ASCE</div>
+          <div class="pub-links"><a class="pub-link">PDF</a><a class="pub-link">Video</a><a class="pub-link">DOI</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer><div class="fl"><span>BUILT</span> LAB · [Your University]</div><div class="fr">© 2024 BUILT Lab — AI for the Built Environment</div></footer>
+</section>
+
+<!-- ════════ TEAM ════════ -->
+<section class="section" id="team">
+  <div class="page-header">
+    <div class="pg-tag">// 04 — Team</div>
+    <div class="pg-title">People</div>
+    <p class="pg-sub">A multidisciplinary team of engineers, AI researchers, and educators united by a mission to transform the built environment.</p>
+  </div>
+  <div class="content">
+    <div class="sec-hd"><h2>Principal Investigator</h2></div>
+    <div style="max-width:540px;margin-bottom:3rem">
+      <div class="tc">
+        <div style="display:flex;gap:1rem;align-items:center">
+          <div class="avatar av1">[YI]</div>
+          <div><div class="tname">[Your Full Name], PhD</div><div class="trole">Lab Director · Associate Professor</div></div>
+        </div>
+        <div class="tbio">[University], Dept. of Civil &amp; Construction Engineering. Research spans AI for the built environment: XR, digital twins, edge AI, multimodal LLMs, human–building interaction, and LLM-enabled human–robot collaboration for construction.</div>
+        <div class="tag-list"><span class="tag">XR</span><span class="tag">Digital Twin</span><span class="tag">LLMs</span><span class="tag">Edge AI</span><span class="tag">HRI</span><span class="tag">Construction AI</span><span class="tag">AI Education</span></div>
+      </div>
+    </div>
+    <div class="sec-hd"><h2>PhD Researchers</h2></div>
+    <div class="g3" style="margin-bottom:3rem">
+      <div class="tc">
+        <div style="display:flex;gap:0.85rem;align-items:center"><div class="avatar av2">R1</div><div><div class="tname">[Researcher 1]</div><div class="trole">PhD Student · Year 3</div></div></div>
+        <div class="tbio">XR-based safety training and adaptive scenario generation using LLMs in AR/VR construction environments.</div>
+        <div class="tag-list"><span class="tag">XR</span><span class="tag">Safety</span><span class="tag">LLM</span></div>
+      </div>
+      <div class="tc">
+        <div style="display:flex;gap:0.85rem;align-items:center"><div class="avatar av3">R2</div><div><div class="tname">[Researcher 2]</div><div class="trole">PhD Student · Year 2</div></div></div>
+        <div class="tbio">Edge AI deployment for structural health monitoring and real-time digital twin synchronization with BIM.</div>
+        <div class="tag-list"><span class="tag">Edge AI</span><span class="tag">Digital Twin</span><span class="tag">BIM</span></div>
+      </div>
+      <div class="tc">
+        <div style="display:flex;gap:0.85rem;align-items:center"><div class="avatar av4">R3</div><div><div class="tname">[Researcher 3]</div><div class="trole">PhD Student · Year 2</div></div></div>
+        <div class="tbio">Human–robot collaboration on construction sites; LLM-based natural language task delegation and situational awareness.</div>
+        <div class="tag-list"><span class="tag">HRI</span><span class="tag">Robotics</span><span class="tag">NLP</span></div>
+      </div>
+      <div class="tc">
+        <div style="display:flex;gap:0.85rem;align-items:center"><div class="avatar av5">R4</div><div><div class="tname">[Researcher 4]</div><div class="trole">PhD Student · Year 1</div></div></div>
+        <div class="tbio">Multimodal AI tutoring systems for construction engineering education; cognitive load measurement via sensing.</div>
+        <div class="tag-list"><span class="tag">AI Education</span><span class="tag">Multimodal</span></div>
+      </div>
+      <div class="tc">
+        <div style="display:flex;gap:0.85rem;align-items:center"><div class="avatar av6">R5</div><div><div class="tname">[Researcher 5]</div><div class="trole">PhD Student · Year 1</div></div></div>
+        <div class="tbio">Human–building interaction sensing via computer vision and occupancy-based adaptive building control systems.</div>
+        <div class="tag-list"><span class="tag">Computer Vision</span><span class="tag">HBI</span><span class="tag">Controls</span></div>
+      </div>
+    </div>
+    <div class="sec-hd"><h2>Alumni</h2></div>
+    <div class="g3">
+      <div class="card"><h3>[Alumni Name 1]</h3><p>PhD [Year]. Now [Position] at [Organization].</p></div>
+      <div class="card"><h3>[Alumni Name 2]</h3><p>PhD [Year]. Now [Position] at [Organization].</p></div>
+      <div class="card"><h3>[Alumni Name 3]</h3><p>MS [Year]. Now [Position] at [Organization].</p></div>
+    </div>
+  </div>
+  <footer><div class="fl"><span>BUILT</span> LAB · [Your University]</div><div class="fr">© 2024 BUILT Lab — AI for the Built Environment</div></footer>
+</section>
+
+<!-- ════════ NEWS ════════ -->
+<section class="section" id="news">
+  <div class="page-header">
+    <div class="pg-tag">// 05 — News</div>
+    <div class="pg-title">Lab Updates</div>
+    <p class="pg-sub">Awards, grants, publications, and milestones from the BUILT Lab.</p>
+  </div>
+  <div class="content">
+    <div class="news-item">
+      <div class="ndate"><div class="nday">15</div><div class="nmo">Nov 2024</div></div>
+      <div><span class="nbadge">Award</span><div class="ntitle">Edge AI Paper Wins Best Paper at Safety Science</div><div class="ntext">Our paper on real-time edge AI for construction site worker hazard detection received the Best Paper Award from Safety Science journal (Vol. 172).</div></div>
+    </div>
+    <div class="news-item">
+      <div class="ndate"><div class="nday">03</div><div class="nmo">Sep 2024</div></div>
+      <div><span class="nbadge">Grant</span><div class="ntitle">NSF Award for Human–Building Interaction Research</div><div class="ntext">BUILT Lab received NSF award #2312456 ($420K) to study occupant behavior modeling using multi-camera computer vision for adaptive building control systems.</div></div>
+    </div>
+    <div class="news-item">
+      <div class="ndate"><div class="nday">22</div><div class="nmo">Jul 2024</div></div>
+      <div><span class="nbadge">Publication</span><div class="ntitle">LLM Construction Robotics Paper Published in Automation in Construction</div><div class="ntext">Our paper on LLM task planning for human–robot collaboration on unstructured construction sites is now published in Automation in Construction.</div></div>
+    </div>
+    <div class="news-item">
+      <div class="ndate"><div class="nday">10</div><div class="nmo">May 2024</div></div>
+      <div><span class="nbadge">Talk</span><div class="ntitle">Invited Keynote at ASCE Construction Research Congress 2024</div><div class="ntext">Lab director delivered an invited keynote on "Multimodal AI and the Future of Construction Site Intelligence" to 800+ attendees at CRC 2024, Des Moines.</div></div>
+    </div>
+    <div class="news-item">
+      <div class="ndate"><div class="nday">01</div><div class="nmo">Jan 2024</div></div>
+      <div><span class="nbadge">New Members</span><div class="ntitle">Two New PhD Students Join for Spring 2024</div><div class="ntext">The BUILT Lab welcomes [Researcher 4] and [Researcher 5] as new PhD students, focusing on AI for construction education and human–building interaction.</div></div>
+    </div>
+    <div class="news-item">
+      <div class="ndate"><div class="nday">18</div><div class="nmo">Aug 2023</div></div>
+      <div><span class="nbadge">Grant</span><div class="ntitle">$310K Industry Grant for LLM-Enabled Construction Robotics</div><div class="ntext">A new industry-funded collaborative research project to develop LLM-enabled human–robot teaming systems for real-world construction job sites.</div></div>
+    </div>
+  </div>
+  <footer><div class="fl"><span>BUILT</span> LAB · [Your University]</div><div class="fr">© 2024 BUILT Lab — AI for the Built Environment</div></footer>
+</section>
+
+<!-- ════════ CONTACT ════════ -->
+<section class="section" id="contact">
+  <div class="page-header">
+    <div class="pg-tag">// 06 — Contact</div>
+    <div class="pg-title">Get in Touch</div>
+    <p class="pg-sub">PhD opportunities, industry collaborations, speaking invitations — we'd love to connect.</p>
+  </div>
+  <div class="content">
+    <div class="contact-wrap">
+      <div>
+        <div class="ch3">Lab Information</div>
+        <div class="cl"><div class="ci">📍</div><div class="cinfo"><strong>Address</strong>[Building], Room [XXX]<br>[University Name]<br>[City, State ZIP]</div></div>
+        <div class="cl"><div class="ci">✉️</div><div class="cinfo"><strong>Email</strong>builtlab@university.edu</div></div>
+        <div class="cl"><div class="ci">🔗</div><div class="cinfo"><strong>GitHub</strong>github.com/built-lab</div></div>
+        <div class="cl"><div class="ci">🐦</div><div class="cinfo"><strong>Twitter / X</strong>@built_lab</div></div>
+        <div class="cl"><div class="ci">🎓</div><div class="cinfo"><strong>Google Scholar</strong>scholar.google.com/[profile]</div></div>
+        <div style="margin-top:1.75rem;padding:1.4rem;background:rgba(249,115,22,0.05);border:1px solid rgba(249,115,22,0.15);border-radius:6px">
+          <div class="ch3" style="font-size:0.93rem;margin-bottom:0.6rem">🎯 PhD &amp; Postdoc Openings</div>
+          <p style="font-size:0.81rem;color:var(--textdim);line-height:1.65;font-weight:400">Recruiting PhD students for <strong style="color:var(--text)">Fall 2025</strong> in XR, edge AI, and multimodal LLMs for AEC. Send your CV, a 1-page research statement, and representative work to builtlab@university.edu.</p>
+        </div>
+      </div>
+      <div>
+        <div class="ch3">Send a Message</div>
+        <div class="fg"><label>Your Name</label><input type="text" placeholder="Jane Smith"/></div>
+        <div class="fg"><label>Email</label><input type="email" placeholder="jane@university.edu"/></div>
+        <div class="fg"><label>Subject</label><input type="text" placeholder="PhD inquiry / Collaboration / Invitation"/></div>
+        <div class="fg"><label>Message</label><textarea placeholder="Tell us about your background and interest in the BUILT Lab..."></textarea></div>
+        <button class="btn btn-primary" style="width:100%">Send Message →</button>
+      </div>
+    </div>
+  </div>
+  <footer><div class="fl"><span>BUILT</span> LAB · [Your University]</div><div class="fr">© 2024 BUILT Lab — AI for the Built Environment</div></footer>
+</section>
+
+<script>
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('nav-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
