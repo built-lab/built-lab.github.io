@@ -1,782 +1,142 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BUILT Lab — AI for the Built Environment · EIU</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-/* ══ LIGHT (default) ══ */
-:root {
-  --bg:#ffffff; --bg2:#f8f7f5; --bg3:#f0ede8;
-  --orange:#e8621a; --orange2:#f97316;
-  --text:#0f0f0f; --textdim:#5a5a5a; --textmute:#9a9a9a;
-  --border:rgba(0,0,0,0.09); --border2:rgba(232,98,26,0.28);
-  --card:#f8f7f5; --cardhov:#fff4ee;
-  --navbg:rgba(255,255,255,0.93);
-  --shadow:0 1px 3px rgba(0,0,0,0.07),0 4px 16px rgba(0,0,0,0.04);
-  --shadowhov:0 4px 20px rgba(232,98,26,0.12),0 1px 4px rgba(0,0,0,0.06);
-  --grid:rgba(232,98,26,0.05);
-}
-/* ══ DARK ══ */
-[data-theme="dark"] {
-  --bg:#0d0e0f; --bg2:#111315; --bg3:#181b1e;
-  --orange:#f97316; --orange2:#fb923c;
-  --text:#f1f5f9; --textdim:#94a3b8; --textmute:#475569;
-  --border:rgba(255,255,255,0.08); --border2:rgba(249,115,22,0.25);
-  --card:rgba(255,255,255,0.03); --cardhov:rgba(249,115,22,0.06);
-  --navbg:rgba(13,14,15,0.93);
-  --shadow:0 1px 3px rgba(0,0,0,0.3);
-  --shadowhov:0 4px 20px rgba(249,115,22,0.18);
-  --grid:rgba(249,115,22,0.04);
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background 0.3s,color 0.3s}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;z-index:0}
-
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:62px;background:var(--navbg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:background 0.3s,border-color 0.3s}
-.nav-logo{display:flex;align-items:center;gap:0.6rem;cursor:pointer;text-decoration:none}
-.nav-mark{width:26px;height:26px;background:var(--orange);clip-path:polygon(0 100%,50% 0,100% 100%);flex-shrink:0;transition:background 0.3s}
-.nav-wordmark{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.12em;color:var(--text);line-height:1;transition:color 0.3s}
-.nav-wordmark span{color:var(--orange)}
-.nav-links{display:flex;gap:0;list-style:none}
-.nav-links li a{display:block;padding:0.38rem 0.82rem;font-family:'JetBrains Mono',monospace;font-size:0.66rem;font-weight:400;text-transform:uppercase;letter-spacing:0.1em;color:var(--textmute);text-decoration:none;border-radius:4px;transition:color 0.2s,background 0.2s;cursor:pointer}
-.nav-links li a:hover,.nav-links li a.active{color:var(--orange);background:rgba(232,98,26,0.08)}
-.theme-toggle{display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--textmute);border:1px solid var(--border);padding:0.28rem 0.7rem;border-radius:20px;background:transparent;transition:all 0.2s;white-space:nowrap}
-.theme-toggle:hover{border-color:var(--orange);color:var(--orange)}
-
-/* SECTIONS */
-.section{display:none;position:relative;z-index:1}
-.section.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-.section.active .hero{animation:fadeUp 0.42s ease both}
-.section.active .page-header{animation:fadeUp 0.42s ease both}
-.section.active .home-body{animation:fadeUp 0.42s ease both;animation-delay:.1s}
-.section.active .content{animation:fadeUp 0.42s ease both;animation-delay:.14s}
-
-/* BTN */
-.btn{display:inline-flex;align-items:center;gap:0.45rem;padding:0.7rem 1.55rem;border-radius:3px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:600;letter-spacing:0.04em;text-decoration:none;cursor:pointer;border:none;transition:all 0.2s}
-.btn-primary{background:var(--orange);color:#fff}
-.btn-primary:hover{background:var(--orange2);box-shadow:0 0 22px rgba(232,98,26,0.28)}
-.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
-.btn-ghost:hover{border-color:var(--orange);color:var(--orange)}
-
-/* HERO */
-.hero{min-height:100vh;padding:8rem 2.5rem 4rem;display:grid;grid-template-columns:1fr 380px;gap:4rem;align-items:center;max-width:1400px;margin:0 auto}
-.hero-overline{display:flex;align-items:center;gap:0.75rem;font-family:'JetBrains Mono',monospace;font-size:0.67rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--orange);margin-bottom:1.4rem}
-.hero-overline::before{content:'';width:2rem;height:1px;background:var(--orange)}
-h1.ht{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,8.5vw,7.5rem);line-height:0.92;letter-spacing:0.03em;margin-bottom:0.5rem}
-h1.ht .ac{color:var(--orange);display:block}
-h1.ht .sub{font-family:'Syne',sans-serif;font-size:clamp(0.95rem,1.7vw,1.15rem);font-weight:500;letter-spacing:0.01em;color:var(--textdim);display:block;margin-top:0.85rem;line-height:1.5}
-.hero-desc{max-width:520px;font-size:0.93rem;font-weight:400;line-height:1.82;color:var(--textdim);margin:1.6rem 0 2.1rem}
-.hero-cta{display:flex;gap:0.85rem;flex-wrap:wrap}
-.hero-right{display:flex;flex-direction:column;gap:1rem}
-.panel{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.5rem;position:relative;overflow:hidden;box-shadow:var(--shadow);transition:background 0.3s,border-color 0.3s}
-.panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--orange),transparent)}
-.panel-label{font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.16em;color:var(--orange);margin-bottom:0.9rem}
-.topic-list{display:flex;flex-direction:column;gap:0.35rem}
-.topic{display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;font-weight:500;color:var(--textdim);padding:0.42rem 0.58rem;border-radius:4px;border:1px solid transparent;transition:all 0.18s}
-.topic:hover{background:rgba(232,98,26,0.06);border-color:var(--border2);color:var(--text)}
-.dot{width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;opacity:0.5}
-.topic:hover .dot{opacity:1}
-
-/* HOME BODY */
-.home-body{padding:0 2.5rem 4rem;max-width:1400px;margin:0 auto}
-.about-strip{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:0 6px 6px 0;padding:2rem 2.5rem;margin-bottom:3.5rem;box-shadow:var(--shadow);transition:background 0.3s}
-.about-strip .strip-tag{font-family:'JetBrains Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.18em;color:var(--orange);margin-bottom:0.9rem}
-.about-strip h2{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:0.06em;margin-bottom:1rem;color:var(--text)}
-.about-strip p{font-size:0.93rem;line-height:1.82;color:var(--textdim);max-width:820px;font-weight:400}
-.about-strip p+p{margin-top:0.75rem}
-.highlight-pills{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.5rem}
-.hpill{font-family:'JetBrains Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;padding:0.28rem 0.75rem;border-radius:20px;background:rgba(232,98,26,0.08);color:var(--orange);border:1px solid rgba(232,98,26,0.2);transition:background 0.2s}
-.hpill:hover{background:rgba(232,98,26,0.15)}
-
-/* FUNDING STRIP */
-.funding-strip{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:0 6px 6px 0;padding:1.25rem 2rem;margin-bottom:3.5rem;box-shadow:var(--shadow)}
-.funding-strip .strip-tag{font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.16em;color:var(--orange);margin-bottom:0.6rem}
-.funding-strip p{font-size:0.87rem;color:var(--textdim);line-height:1.65}
-.funding-strip strong{color:var(--text)}
-
-/* SEC HD */
-.sec-hd{display:flex;align-items:center;gap:1rem;margin-bottom:1.75rem}
-.sec-hd h2{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:0.08em;white-space:nowrap}
-.sec-hd::after{content:'';flex:1;height:1px;background:var(--border)}
-
-/* CARDS */
-.g2{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.25rem}
-.g3{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:1.25rem}
-.card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.55rem;box-shadow:var(--shadow);transition:background 0.2s,border-color 0.2s,transform 0.2s,box-shadow 0.2s}
-.card:hover{background:var(--cardhov);border-color:var(--border2);transform:translateY(-3px);box-shadow:var(--shadowhov)}
-.ctag{font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--orange);background:rgba(232,98,26,0.08);display:inline-block;padding:0.17rem 0.52rem;border-radius:2px;margin-bottom:0.75rem}
-.card h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.5rem;line-height:1.3;color:var(--text)}
-.card p{font-size:0.83rem;color:var(--textdim);line-height:1.7;font-weight:400}
-.card-meta{margin-top:1rem;padding-top:0.85rem;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--textmute);display:flex;gap:0.8rem;flex-wrap:wrap}
-
-/* AREA CARDS */
-.ac2{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.6rem;transition:all 0.25s;position:relative;overflow:hidden;box-shadow:var(--shadow)}
-.ac2::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--orange),transparent);transform:scaleX(0);transform-origin:left;transition:transform 0.3s}
-.ac2:hover::after{transform:scaleX(1)}
-.ac2:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:var(--shadowhov)}
-.ac2-num{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:rgba(232,98,26,0.12);line-height:1;margin-bottom:0.4rem;letter-spacing:0.05em}
-.ac2 h3{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;margin-bottom:0.4rem;line-height:1.3;color:var(--text)}
-.ac2 p{font-size:0.81rem;color:var(--textdim);line-height:1.65}
-
-/* PAGE HEADER */
-.page-header{padding:6.5rem 2.5rem 2.5rem;border-bottom:1px solid var(--border);max-width:1400px;margin:0 auto;position:relative;overflow:hidden}
-.page-header::after{content:'BUILT LAB';font-family:'Bebas Neue',sans-serif;font-size:9rem;letter-spacing:0.04em;color:rgba(232,98,26,0.05);position:absolute;right:1.5rem;bottom:-1.5rem;line-height:1;pointer-events:none}
-.pg-tag{font-family:'JetBrains Mono',monospace;font-size:0.63rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--orange);margin-bottom:0.9rem}
-.pg-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,5rem);letter-spacing:0.04em;line-height:1;margin-bottom:0.7rem}
-.pg-sub{color:var(--textdim);font-size:0.9rem;max-width:500px;line-height:1.72;font-weight:400}
-
-/* CONTENT */
-.content{padding:3rem 2.5rem;max-width:1400px;margin:0 auto}
-
-/* PUBS */
-.pub-list{display:flex;flex-direction:column;gap:1rem}
-.pub-item{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.4rem;display:flex;gap:1.4rem;align-items:flex-start;box-shadow:var(--shadow);transition:all 0.2s}
-.pub-item:hover{background:var(--cardhov);border-color:var(--border2)}
-.pub-yr{font-family:'JetBrains Mono',monospace;font-size:0.76rem;color:var(--orange);min-width:38px;padding-top:0.1rem;font-weight:500}
-.pub-body h3{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;margin-bottom:0.28rem;line-height:1.35;color:var(--text)}
-.pub-authors{font-size:0.78rem;color:var(--textmute);margin-bottom:0.3rem}
-.pub-venue{font-family:'JetBrains Mono',monospace;font-size:0.63rem;color:var(--orange2);letter-spacing:0.03em}
-.pub-links{display:flex;gap:0.4rem;margin-top:0.65rem;flex-wrap:wrap}
-.pub-link{font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.08em;padding:0.18rem 0.58rem;border-radius:2px;border:1px solid var(--border);color:var(--textmute);cursor:pointer;transition:all 0.15s;text-decoration:none}
-.pub-link:hover{border-color:var(--orange);color:var(--orange)}
-.pub-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.56rem;text-transform:uppercase;letter-spacing:0.1em;padding:0.12rem 0.45rem;border-radius:2px;background:rgba(232,98,26,0.08);color:var(--orange);border:1px solid rgba(232,98,26,0.18);margin-left:0.5rem;vertical-align:middle}
-
-/* TEAM */
-.tc{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.5rem;box-shadow:var(--shadow);transition:all 0.2s;display:flex;flex-direction:column;gap:0.9rem}
-.tc:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:var(--shadowhov)}
-.avatar{width:54px;height:54px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:#fff;letter-spacing:0.04em;flex-shrink:0}
-.av1{background:linear-gradient(135deg,var(--orange),#fbbf24)}
-.av2{background:linear-gradient(135deg,#f43f5e,var(--orange))}
-.av3{background:linear-gradient(135deg,#8b5cf6,#3b82f6)}
-.av4{background:linear-gradient(135deg,#10b981,#06b6d4)}
-.av5{background:linear-gradient(135deg,#f59e0b,#ef4444)}
-.av6{background:linear-gradient(135deg,#6366f1,#c084fc)}
-.tname{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;margin-bottom:0.13rem;color:var(--text)}
-.trole{font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--orange)}
-.tbio{font-size:0.81rem;color:var(--textdim);line-height:1.65}
-.tag-list{display:flex;flex-wrap:wrap;gap:0.3rem}
-.tag{font-family:'JetBrains Mono',monospace;font-size:0.56rem;padding:0.15rem 0.48rem;border-radius:2px;background:rgba(232,98,26,0.07);color:var(--orange);border:1px solid rgba(232,98,26,0.15)}
-
-/* NEWS */
-.news-item{display:grid;grid-template-columns:76px 1fr;gap:1.4rem;padding:1.4rem 0;border-bottom:1px solid var(--border)}
-.nday{font-family:'Bebas Neue',sans-serif;font-size:2.1rem;color:var(--orange);line-height:1;letter-spacing:0.04em}
-.nmo{font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--textmute)}
-.nbadge{display:inline-block;margin-bottom:0.38rem;font-family:'JetBrains Mono',monospace;font-size:0.56rem;text-transform:uppercase;letter-spacing:0.1em;padding:0.14rem 0.48rem;border-radius:2px;background:rgba(232,98,26,0.08);color:var(--orange);border:1px solid rgba(232,98,26,0.18)}
-.ntitle{font-family:'Syne',sans-serif;font-size:0.97rem;font-weight:700;margin-bottom:0.3rem;line-height:1.35;color:var(--text)}
-.ntext{font-size:0.83rem;color:var(--textdim);line-height:1.65}
-
-/* CONTACT */
-.contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;max-width:880px}
-.ch3{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:1.15rem;color:var(--text)}
-.cl{display:flex;align-items:flex-start;gap:0.7rem;margin-bottom:0.85rem}
-.ci{width:30px;height:30px;border-radius:4px;background:rgba(232,98,26,0.08);border:1px solid rgba(232,98,26,0.15);display:flex;align-items:center;justify-content:center;font-size:0.82rem;flex-shrink:0}
-.cinfo{font-size:0.83rem;color:var(--textdim);line-height:1.5}
-.cinfo strong{display:block;color:var(--text);font-size:0.62rem;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.12rem;font-weight:400}
-.fg{margin-bottom:0.85rem}
-.fg label{display:block;font-family:'JetBrains Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--textmute);margin-bottom:0.38rem}
-.fg input,.fg textarea{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:0.58rem 0.8rem;color:var(--text);font-family:'Syne',sans-serif;font-size:0.87rem;outline:none;transition:border-color 0.2s;resize:vertical}
-.fg input:focus,.fg textarea:focus{border-color:var(--orange)}
-.fg textarea{min-height:95px}
-
-/* FOOTER */
-footer{margin-top:5rem;border-top:1px solid var(--border);padding:1.6rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;position:relative;z-index:1}
-.fl{font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:0.12em;color:var(--textmute)}
-.fl span{color:var(--orange)}
-.fr{font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--textmute);letter-spacing:0.05em}
-
-/* RESPONSIVE */
-@media(max-width:900px){.hero{grid-template-columns:1fr;gap:2.5rem;padding-top:6rem}}
-@media(max-width:768px){
-  nav{padding:0 1.25rem}
-  .nav-links li a{padding:0.35rem 0.5rem;font-size:0.6rem}
-  .theme-toggle span{display:none}
-  .content,.home-body{padding:2rem 1.5rem}
-  .page-header{padding:5.5rem 1.5rem 2rem}
-  footer{padding:1.4rem 1.5rem}
-  .contact-wrap{grid-template-columns:1fr}
-  .about-strip,.funding-strip{padding:1.5rem}
-}
-</style>
+<meta name="description" content="BUILT Lab pioneers AI-driven research at the intersection of construction, infrastructure, and intelligent technology at Eastern Illinois University.">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<nav>
-  <a class="nav-logo" onclick="show('home')">
-    <div class="nav-mark"></div>
-    <div class="nav-wordmark">BUILT<span> LAB</span></div>
-  </a>
-  <ul class="nav-links">
-    <li><a onclick="show('home')"         id="nav-home"         class="active">Home</a></li>
-    <li><a onclick="show('research')"     id="nav-research">Research</a></li>
-    <li><a onclick="show('publications')" id="nav-publications">Publications</a></li>
-    <li><a onclick="show('team')"         id="nav-team">Team</a></li>
-    <li><a onclick="show('news')"         id="nav-news">News</a></li>
-    <li><a onclick="show('contact')"      id="nav-contact">Contact</a></li>
-  </ul>
-  <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle dark mode">
-    <span id="themeIcon">🌙</span>
-    <span id="themeLabel">Dark Mode</span>
-  </button>
-</nav>
-
-<!-- ════════════════ HOME ════════════════ -->
-<section class="section active" id="home">
-  <div class="hero">
-    <div class="hero-left">
-      <div class="hero-overline">Research Lab · School of Technology · Eastern Illinois University</div>
-      <h1 class="ht">
-        BUILT
-        <span class="ac">ENVIRONMENT</span>
-        <span class="sub">Intelligent Systems &amp; AI Research Lab</span>
-      </h1>
-      <p class="hero-desc">
-        The BUILT Lab pioneers AI-driven research at the intersection of construction, infrastructure, and intelligent technology — developing smarter, safer, and more human-centered built environments through rigorous science and real-world deployment.
-      </p>
-      <div class="hero-cta">
-        <button class="btn btn-primary" onclick="show('research')">Explore Research →</button>
-        <button class="btn btn-ghost"   onclick="show('publications')">Publications</button>
-      </div>
-    </div>
-    <div class="hero-right">
-      <div class="panel">
-        <div class="panel-label">// Core Research Themes</div>
-        <div class="topic-list">
-          <div class="topic"><div class="dot"></div>XR / Extended Reality for Construction</div>
-          <div class="topic"><div class="dot"></div>AI for Construction Education</div>
-          <div class="topic"><div class="dot"></div>Human–Building Interaction</div>
-          <div class="topic"><div class="dot"></div>Digital Twins &amp; BIM Intelligence</div>
-          <div class="topic"><div class="dot"></div>Edge AI &amp; On-Site Sensing</div>
-          <div class="topic"><div class="dot"></div>Multimodal LLMs for AEC</div>
-          <div class="topic"><div class="dot"></div>Human–Robot Collaboration with LLMs</div>
-          <div class="topic"><div class="dot"></div>Blockchain &amp; Decentralized Systems</div>
-        </div>
-      </div>
-    </div>
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="index.html"><span class="mark">BL</span> BUILT Lab</a>
+    <nav class="tabs">
+      <a href="index.html" class="active">Home</a>
+      <a href="research.html">Research</a>
+      <a href="publications.html">Publications</a>
+      <a href="team.html">Team</a>
+      <a href="news.html">News</a>
+      <a href="contact.html">Contact</a>
+    </nav>
   </div>
+</header>
 
-  <div class="home-body">
-
-    <!-- ABOUT -->
-    <div class="about-strip">
-      <div class="strip-tag">// About the Lab</div>
-      <h2>Who We Are</h2>
-      <p>
-        The <strong>BUILT Lab</strong> (Built Environment Intelligent Systems Lab) is a research group at <strong>Eastern Illinois University</strong> dedicated to transforming how humans design, build, operate, and experience the built environment through artificial intelligence. We sit at the intersection of construction engineering, computer science, and human factors — producing work that is both theoretically rigorous and immediately deployable in real buildings, on construction sites, and in classrooms.
-      </p>
-      <p>
-        Our research spans XR (AR/VR) for construction training and inspection, AI-powered adaptive learning systems for construction engineering students, human–building interaction via LLMs and IoT sensing, real-time digital twins powered by edge AI, multimodal large language models for AEC document intelligence, LLM-guided human–robot collaboration on job sites, and blockchain-based decentralized autonomous systems for smart building management.
-      </p>
-      <div class="highlight-pills">
-        <span class="hpill">XR + AR/VR</span>
-        <span class="hpill">Digital Twins</span>
-        <span class="hpill">Edge AI</span>
-        <span class="hpill">Multimodal LLMs</span>
-        <span class="hpill">Construction Education</span>
-        <span class="hpill">Human–Building Interaction</span>
-        <span class="hpill">Human–Robot Collaboration</span>
-        <span class="hpill">Blockchain / DAO</span>
-        <span class="hpill">BIM Intelligence</span>
-        <span class="hpill">Smart Buildings</span>
+<main>
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">Research Lab · School of Technology · Eastern Illinois University</span>
+      <h1>Intelligent Systems &amp; AI for the Built Environment</h1>
+      <p class="lede">The BUILT Lab pioneers AI-driven research at the intersection of construction, infrastructure, and intelligent technology — developing smarter, safer, and more human-centered built environments through rigorous science and real-world deployment.</p>
+      <div class="btn-row">
+        <a class="btn primary" href="research.html">Explore Research →</a>
+        <a class="btn ghost" href="publications.html">View Publications</a>
       </div>
     </div>
 
-    <!-- FUNDING -->
-    <div class="funding-strip">
-      <div class="strip-tag">// Research Funding</div>
-      <p><strong>2026 — Redden Grant · Eastern Illinois University</strong><br>
-      Generative AI-Powered Human-Robot Collaboration Demonstration for Construction Technology Education · Award: $2,500</p>
-    </div>
-
-    <!-- FEATURED PROJECTS -->
-    <div class="sec-hd"><h2>Featured Projects</h2></div>
-    <div class="g2">
-
-      <div class="card">
-        <div class="ctag">LLM · Smart Building</div>
-        <h3>AI Assistant for Smart Buildings Using Large Language Models</h3>
-        <p>LLaMA 3-powered AI virtual assistant enabling occupants to control building facilities, adjust HVAC setpoints, and query real-time indoor environmental sensor data through text and voice input.</p>
-        <div class="card-meta"><span>HBI + LLM</span><span>IoT + Edge</span><span>Open-source LLM</span></div>
-      </div>
-
-      <div class="card">
-        <div class="ctag">Edge AI · Smart Home</div>
-        <h3>Small Language Model-Based Smart Home for Human–Building Interaction</h3>
-        <p>Deploying Phi-3 Mini and Llama 3.2 on Raspberry Pi 5 for localized, cost-effective natural language interaction with smart home systems — enabling on-device AI decision-making for sustainable smart buildings.</p>
-        <div class="card-meta"><span>Edge AI</span><span>Raspberry Pi</span><span>SLM</span></div>
-      </div>
-
-      <div class="card">
-        <div class="ctag">LLM · Digital Twin</div>
-        <h3>TwinGPT: LLM-Based AI Assistant for Digital Twin Query</h3>
-        <p>AI-powered digital twin query system for facility managers integrating static BIM data with dynamic sensor, occupancy, and environmental inputs via an interactive Llama 3.2 chatbot interface.</p>
-        <div class="card-meta"><span>Digital Twin</span><span>BIM</span><span>Llama 3.2</span></div>
-      </div>
-
-      <div class="card">
-        <div class="ctag">AI Agent · Autonomous</div>
-        <h3>AI Agent for Autonomous Building Operation Using LLMs</h3>
-        <p>LLM-based autonomous building operation framework combining IoT devices, smart facilities, and blockchain. Threshold-based and occupancy-based automation for HVAC and lighting optimization.</p>
-        <div class="card-meta"><span>IoT + LLM</span><span>Blockchain</span><span>Automation</span></div>
-      </div>
-
-      <div class="card">
-        <div class="ctag">VLM · Construction Safety</div>
-        <h3>Vision Language Model AI Agent for Construction Site Safety Monitoring</h3>
-        <p>VLM-based autonomous system monitoring construction site progress and safety via live CCTV feeds, generating emergency alerts and safety reports through an integrated LLM agent.</p>
-        <div class="card-meta"><span>VLM</span><span>Safety</span><span>LLaVA + LLaMA</span></div>
-      </div>
-
-      <div class="card">
-        <div class="ctag">XR · Multimodal AI</div>
-        <h3>VLM + LLM + XR Extended Reality AI Assistant for Smart Buildings</h3>
-        <p>Integrating Vision Language Models, LLMs, and Microsoft HoloLens 2 into an immersive XR environment where facility managers interact with BIM models and control smart building systems via voice commands.</p>
-        <div class="card-meta"><span>XR + HoloLens 2</span><span>VLM + LLM</span><span>Smart City</span></div>
-      </div>
-
-      <div class="card">
-        <div class="ctag">RAG · Construction</div>
-        <h3>RAG Chatbot for Construction Safety Using LLM</h3>
-        <p>Retrieval-Augmented Generation chatbot using LLaMA 3 and a vector database providing construction personnel with instant, contextually accurate access to safety protocols and building codes.</p>
-        <div class="card-meta"><span>RAG</span><span>LLaMA 3</span><span>Safety Knowledge</span></div>
-      </div>
-
-      <div class="card">
-        <div class="ctag">Blockchain · Digital Twin</div>
-        <h3>Decentralized Digital Building Twin Using Blockchain Networks</h3>
-        <p>Blockchain-based IoT framework leveraging Hyperledger Fabric and Ethereum to automate and optimize building facilities operations through decentralized control, storage, and real-time digital twin visualization.</p>
-        <div class="card-meta"><span>Blockchain</span><span>Hyperledger</span><span>Digital Twin</span></div>
-      </div>
-
-    </div>
-  </div><!-- /home-body -->
-  <footer><div class="fl"><span>BUILT</span> LAB · Eastern Illinois University</div><div class="fr">© 2025 BUILT Lab — AI for the Built Environment</div></footer>
-</section>
-
-<!-- ════════════════ RESEARCH ════════════════ -->
-<section class="section" id="research">
-  <div class="page-header">
-    <div class="pg-tag">// 02 — Research</div>
-    <div class="pg-title">Areas &amp; Projects</div>
-    <p class="pg-sub">Eight interconnected research thrusts advancing intelligence in the built environment — from smart buildings to construction job sites.</p>
-  </div>
-  <div class="content">
-    <div class="sec-hd"><h2>Research Areas</h2></div>
-    <div class="g3" style="margin-bottom:3rem">
-      <div class="ac2"><div class="ac2-num">01</div><h3>XR for Construction</h3><p>AR/VR for safety training, remote inspection, BIM visualization, and design review in AEC workflows.</p></div>
-      <div class="ac2"><div class="ac2-num">02</div><h3>AI for Construction Education</h3><p>Adaptive learning, simulation-based training, RAG chatbots, and GenAI tools for AEC programs.</p></div>
-      <div class="ac2"><div class="ac2-num">03</div><h3>Human–Building Interaction</h3><p>LLM and IoT-based systems enabling occupants to naturally interact with and control smart building environments.</p></div>
-      <div class="ac2"><div class="ac2-num">04</div><h3>Digital Twins</h3><p>BIM-linked real-time digital twins with LLM query interfaces, anomaly detection, and facility management insights.</p></div>
-      <div class="ac2"><div class="ac2-num">05</div><h3>Edge AI &amp; Sensing</h3><p>On-device AI inference on edge hardware (Raspberry Pi) for smart homes, worker safety, and environmental monitoring.</p></div>
-      <div class="ac2"><div class="ac2-num">06</div><h3>Multimodal LLMs for AEC</h3><p>Vision-language models for construction site safety monitoring, BIM querying, and document intelligence.</p></div>
-      <div class="ac2"><div class="ac2-num">07</div><h3>Human–Robot Collaboration</h3><p>GenAI-powered human-robot collaboration demonstrations for construction technology education and job-site tasks.</p></div>
-      <div class="ac2"><div class="ac2-num">08</div><h3>Blockchain &amp; DAO Systems</h3><p>Decentralized autonomous organizations and blockchain-based frameworks for smart building operations and facilities governance.</p></div>
-    </div>
-
-    <div class="sec-hd"><h2>All Projects</h2></div>
-    <div class="g2" style="margin-bottom:3rem">
-      <div class="card"><div class="ctag">LLM · HBI</div><h3>AI Assistant for Smart Buildings Using LLMs</h3><p>LLaMA 3-powered voice/text assistant for occupant-controlled HVAC, lighting, and real-time indoor environmental data via IoT sensors.</p></div>
-      <div class="card"><div class="ctag">Edge AI · SLM</div><h3>Small Language Model Smart Home for HBI</h3><p>Phi-3 Mini and Llama 3.2 deployed on Raspberry Pi 5 for localized, cost-effective AI-driven human–building interaction.</p></div>
-      <div class="card"><div class="ctag">LLM · Digital Twin</div><h3>TwinGPT: AI Assistant for Digital Twin Query</h3><p>Llama 3.2 chatbot integrating static BIM data and dynamic sensor/occupancy data for facility manager decision support.</p></div>
-      <div class="card"><div class="ctag">AI Agent · IoT</div><h3>Autonomous Building Operation AI Agent</h3><p>LLM + blockchain-based autonomous agent for threshold-based and occupancy-based HVAC and lighting management.</p></div>
-      <div class="card"><div class="ctag">VLM · Safety</div><h3>VLM AI Agent for Construction Site Safety Monitoring</h3><p>LLaVA + LLaMA-based agent monitoring CCTV feeds for real-time construction safety and progress analysis with automated alerts.</p></div>
-      <div class="card"><div class="ctag">XR · Multimodal</div><h3>VLM + LLM + XR AI Assistant for Smart Buildings</h3><p>HoloLens 2 XR environment with multimodal AI chatbot for immersive BIM interaction and voice-controlled smart building management.</p></div>
-      <div class="card"><div class="ctag">LLM · Facilities</div><h3>Data-Driven Smart Building Facilities Management</h3><p>AI and digital twin-driven decision support for smart building FM using LLM-powered conversational data analysis and visualization.</p></div>
-      <div class="card"><div class="ctag">RAG · Safety</div><h3>RAG Chatbot for Construction Safety</h3><p>LLaMA 3 + Llamaindex + vector database chatbot providing instant access to construction safety protocols and building codes.</p></div>
-      <div class="card"><div class="ctag">GenAI · Security</div><h3>GenAI Prototype for Smart Home Automation Security</h3><p>SmartHomeSecure — LLaMA-powered prototype detecting YAML configuration defects and vulnerabilities in smart home automation systems.</p></div>
-      <div class="card"><div class="ctag">Digital Twin</div><h3>Digital Building Twin — Bishop-Favrao Hall</h3><p>Real-time digital twin for environmental visualization (temperature, humidity, light, air quality) demonstrated at Virginia Tech's Bishop-Favrao Hall.</p></div>
-      <div class="card"><div class="ctag">Blockchain · DT</div><h3>Decentralized Digital Building Twin</h3><p>Hyperledger Fabric and Ethereum blockchain-based IoT framework for decentralized, automated smart building facilities operations.</p></div>
-    </div>
-
-    <div class="sec-hd"><h2>Research Funding</h2></div>
-    <div class="funding-strip" style="margin-bottom:0">
-      <div class="strip-tag">// Active Funding</div>
-      <p><strong>2026 — Redden Grant · Eastern Illinois University</strong><br>
-      Generative AI-Powered Human-Robot Collaboration Demonstration for Construction Technology Education · Award: $2,500</p>
-    </div>
-  </div>
-  <footer><div class="fl"><span>BUILT</span> LAB · Eastern Illinois University</div><div class="fr">© 2025 BUILT Lab — AI for the Built Environment</div></footer>
-</section>
-
-<!-- ════════════════ PUBLICATIONS ════════════════ -->
-<section class="section" id="publications">
-  <div class="page-header">
-    <div class="pg-tag">// 03 — Publications</div>
-    <div class="pg-title">Papers &amp; Preprints</div>
-    <p class="pg-sub">Refereed journal articles, conference proceedings, and intellectual property disclosures.</p>
-  </div>
-  <div class="content">
-
-    <div class="sec-hd"><h2>Refereed Journal Articles</h2></div>
-    <div class="pub-list" style="margin-bottom:2.5rem">
-
-      <div class="pub-item">
-        <div class="pub-yr">2025</div>
-        <div class="pub-body">
-          <h3>Decentralized Autonomous Organizations in Built Environments: Applications, Potentials and Limitations</h3>
-          <div class="pub-authors">Reachsak Ly, Alireza Shojaei</div>
-          <div class="pub-venue">Information Systems and eBusiness Management Journal · DOI:10.1007/s10257-025-00699-1</div>
-          <div class="pub-links"><a class="pub-link" href="https://doi.org/10.1007/s10257-025-00699-1" target="_blank">DOI</a><a class="pub-link">BibTeX</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item">
-        <div class="pub-yr">2024</div>
-        <div class="pub-body">
-          <h3>Faculty Development Program to Enhance Teaching Quality in Construction</h3>
-          <div class="pub-authors">Saeed Rokooei, Alireza Shojaei, Reachsak Ly</div>
-          <div class="pub-venue">International Journal of Construction Management · DOI:10.1080/15623599.2024.2304475</div>
-          <div class="pub-links"><a class="pub-link" href="https://doi.org/10.1080/15623599.2024.2304475" target="_blank">DOI</a><a class="pub-link">BibTeX</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item">
-        <div class="pub-yr">2023</div>
-        <div class="pub-body">
-          <h3>Autonomous Construction Safety Incentive Mechanism Using Blockchain-Enabled Tokens and Vision-Based Techniques</h3>
-          <div class="pub-authors">Hossein Naderi, Alireza Shojaei, Reachsak Ly</div>
-          <div class="pub-venue">Automation in Construction · Vol. 153 · DOI:10.1016/j.autcon.2023.104959</div>
-          <div class="pub-links"><a class="pub-link" href="https://doi.org/10.1016/j.autcon.2023.104959" target="_blank">DOI</a><a class="pub-link">BibTeX</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item">
-        <div class="pub-yr">2023</div>
-        <div class="pub-body">
-          <h3>Virtual Site Visits in Construction Management Education: A Practical Alternative to Physical Site Visits</h3>
-          <div class="pub-authors">Alireza Shojaei, Reachsak Ly, Saeed Rokooei, Amirsamman Mahdavian, Ahmed AlBayati</div>
-          <div class="pub-venue">Journal of Information Technology in Construction (ITcon) · DOI:10.36680/j.itcon.2023.036</div>
-          <div class="pub-links"><a class="pub-link" href="https://doi.org/10.36680/j.itcon.2023.036" target="_blank">DOI</a><a class="pub-link">BibTeX</a></div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="sec-hd"><h2>Under Review</h2></div>
-    <div class="pub-list" style="margin-bottom:2.5rem">
-
-      <div class="pub-item">
-        <div class="pub-yr">2025</div>
-        <div class="pub-body">
-          <h3>Autonomous Building Cyber-Physical Systems Using Decentralized Autonomous Organizations, Digital Twins, and Large Language Models</h3>
-          <div class="pub-authors">Reachsak Ly, Alireza Shojaei, Xinghua Gao, Philip Agee, Abiola Akanmu</div>
-          <div class="pub-venue">Automation in Construction (Revision Submitted) · Preprint: arXiv:2410.19262</div>
-          <div class="pub-links"><span class="pub-badge">Under Review</span><a class="pub-link" href="https://arxiv.org/abs/2410.19262" target="_blank">arXiv</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item">
-        <div class="pub-yr">2025</div>
-        <div class="pub-body">
-          <h3>Public and Private Blockchain for Decentralized Digital Building Twins and Building Automation Systems</h3>
-          <div class="pub-authors">Reachsak Ly, Alireza Shojaei</div>
-          <div class="pub-venue">Information Systems and eBusiness Management (Submitted)</div>
-          <div class="pub-links"><span class="pub-badge">Under Review</span></div>
-        </div>
-      </div>
-
-      <div class="pub-item">
-        <div class="pub-yr">2025</div>
-        <div class="pub-body">
-          <h3>Data-Driven and Distributed Governance of Building Facilities Management Using DAO, Digital Twin, and LLMs</h3>
-          <div class="pub-authors">Reachsak Ly, Alireza Shojaei, Abiola Akanmu, Xinghua Gao, Philip Agee</div>
-          <div class="pub-venue">Frontiers of Engineering Management (Submitted)</div>
-          <div class="pub-links"><span class="pub-badge">Under Review</span></div>
-        </div>
-      </div>
-
-      <div class="pub-item">
-        <div class="pub-yr">2025</div>
-        <div class="pub-body">
-          <h3>DAO and Blockchain-Based Incentivization Framework for Community-Based Facilities Management</h3>
-          <div class="pub-authors">Reachsak Ly, Alireza Shojaei, Xinghua Gao, Philip Agee, Abiola Akanmu</div>
-          <div class="pub-venue">Information Systems Frontiers (Submitted)</div>
-          <div class="pub-links"><span class="pub-badge">Under Review</span></div>
-        </div>
-      </div>
-
-      <div class="pub-item">
-        <div class="pub-yr">2025</div>
-        <div class="pub-body">
-          <h3>Industry Perspectives on the Role of Education Programs in Supporting Construction Diversity and Inclusion in U.S. Construction</h3>
-          <div class="pub-authors">MohammadHossein Heydari, Hossein Naderi, Reachsak Ly, Alireza Shojaei</div>
-          <div class="pub-venue">Innovative Higher Education (Submitted)</div>
-          <div class="pub-links"><span class="pub-badge">Under Review</span></div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="sec-hd"><h2>Conference Proceedings</h2></div>
-    <div class="pub-list" style="margin-bottom:2.5rem">
-
-      <div class="pub-item">
-        <div class="pub-yr">2025</div>
-        <div class="pub-body">
-          <h3>Smart Building Operations and Virtual Assistants Using LLM</h3>
-          <div class="pub-authors">Reachsak Ly, Alireza Shojaei, Xinghua Gao</div>
-          <div class="pub-venue">33rd ACM Symposium on Foundations of Software Engineering · Trondheim, Norway · DOI:10.1145/3696630.3728706</div>
-          <div class="pub-links"><a class="pub-link" href="https://doi.org/10.1145/3696630.3728706" target="_blank">DOI</a><a class="pub-link">BibTeX</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item">
-        <div class="pub-yr">2024</div>
-        <div class="pub-body">
-          <h3>DT-DAO: Digital Twin and Blockchain-Based DAO Integration Framework for Smart Building Facility Management</h3>
-          <div class="pub-authors">Reachsak Ly, Alireza Shojaei, Hossein Naderi</div>
-          <div class="pub-venue">Construction Research Congress 2024 · ASCE · Des Moines, Iowa · DOI:10.1061/9780784485262.081</div>
-          <div class="pub-links"><a class="pub-link" href="https://doi.org/10.1061/9780784485262.081" target="_blank">DOI</a><a class="pub-link">BibTeX</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item">
-        <div class="pub-yr">2024</div>
-        <div class="pub-body">
-          <h3>From Data to Value: NFT-Powered Framework for Data Exchange of Digital Twins in the AEC Industry</h3>
-          <div class="pub-authors">Hossein Naderi, Reachsak Ly, Alireza Shojaei</div>
-          <div class="pub-venue">Construction Research Congress 2024 · ASCE · Des Moines, Iowa · DOI:10.1061/9780784485262.031</div>
-          <div class="pub-links"><a class="pub-link" href="https://doi.org/10.1061/9780784485262.031" target="_blank">DOI</a><a class="pub-link">BibTeX</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item">
-        <div class="pub-yr">2024</div>
-        <div class="pub-body">
-          <h3>Assessment of Annoyance from Traffic Noise in a School and a Hospital</h3>
-          <div class="pub-authors">Hassan Azad, Alireza Shojaei, Reachsak Ly, Saleh Naseer, Laurie M. Heller</div>
-          <div class="pub-venue">Inter-Noise 2024 · Nantes, France · DOI:10.3397/IN_2024_4264</div>
-          <div class="pub-links"><a class="pub-link" href="https://doi.org/10.3397/IN_2024_4264" target="_blank">DOI</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item">
-        <div class="pub-yr">2021</div>
-        <div class="pub-body">
-          <h3>Continual-Learning-Based Framework for Structural Damage Recognition</h3>
-          <div class="pub-authors">Jiawei Zhang, Jiangpeng Shu, Reachsak Ly, Yiran Ji</div>
-          <div class="pub-venue">10th International Conference on Structural Health Monitoring of Intelligent Infrastructure · Porto, Portugal</div>
-          <div class="pub-links"><a class="pub-link">PDF</a></div>
-        </div>
-      </div>
-
-      <div class="pub-item">
-        <div class="pub-yr">2020</div>
-        <div class="pub-body">
-          <h3>Image-Based Structural Damage Recognition Using Deep Convolutional Neural Networks</h3>
-          <div class="pub-authors">Jiawei Zhang, Reachsak Ly, Weijian Zhao, Yunyi Liu</div>
-          <div class="pub-venue">fib Symposium 2020 — Concrete Structures for Resilient Society · Shanghai, China</div>
-          <div class="pub-links"><a class="pub-link">PDF</a></div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="sec-hd"><h2>Intellectual Property</h2></div>
-    <div class="pub-list" style="margin-bottom:2.5rem">
-      <div class="pub-item">
-        <div class="pub-yr">2025</div>
-        <div class="pub-body">
-          <h3>Decentralized Autonomous Building Cyber-Physical System (DAB-CPS)</h3>
-          <div class="pub-authors">Reachsak Ly, Alireza Shojaei</div>
-          <div class="pub-venue">Virginia Tech IP Disclosure · Invention ID: INV2025-123 · Approved April 2025</div>
-          <div class="pub-links"><span class="pub-badge">Approved</span></div>
-        </div>
-      </div>
-      <div class="pub-item">
-        <div class="pub-yr">2025</div>
-        <div class="pub-body">
-          <h3>LLM-Based Autonomous Building Operations and Virtual Assistants for Smart Buildings</h3>
-          <div class="pub-authors">Reachsak Ly, Alireza Shojaei</div>
-          <div class="pub-venue">Virginia Tech IP Disclosure · Invention ID: INV2025-121 · Approved April 2025</div>
-          <div class="pub-links"><span class="pub-badge">Approved</span></div>
+    <div class="container">
+      <div class="profile">
+        <div class="photo">RL</div>
+        <div>
+          <h3>Reachsak Ly</h3>
+          <div class="role">Principal Investigator · Assistant Professor, Construction Management</div>
+          <p>Directing the <strong>BUILT Lab</strong>, working on AI-driven digital twins, human–building interaction, edge AI, and decentralized systems for the built environment.</p>
         </div>
       </div>
     </div>
+  </section>
 
-    <div class="sec-hd"><h2>Research Reports &amp; Posters</h2></div>
-    <div class="pub-list">
-      <div class="pub-item">
-        <div class="pub-yr">2025</div>
-        <div class="pub-body">
-          <h3>Autonomous Building Operations and Virtual Assistants Using Generative AI</h3>
-          <div class="pub-authors">Reachsak Ly</div>
-          <div class="pub-venue">Poster · 2025 Paul E. Torgersen Graduate Student Research Excellence Award · Virginia Tech, Blacksburg, VA</div>
-          <div class="pub-links"><a class="pub-link">PDF</a></div>
-        </div>
+  <section class="tint">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">// Core Research Themes</span>
+        <h2>Eight threads, one built environment</h2>
+        <p>From job-site sensing to decentralized building governance, our work spans the full stack of intelligent construction.</p>
       </div>
-      <div class="pub-item">
-        <div class="pub-yr">2024</div>
-        <div class="pub-body">
-          <h3>Investigation of Gender and Racial Diversity in U.S. Construction Higher Education</h3>
-          <div class="pub-authors">Reachsak Ly, Mohammad Hossein Heydari, Hossein Naderi, Josh Iorio, Alireza Shojaei</div>
-          <div class="pub-venue">Research Report · 2024</div>
-          <div class="pub-links"><a class="pub-link">PDF</a></div>
-        </div>
+      <div class="grid cols-4">
+        <div class="tile"><h3>XR / Extended Reality</h3><p>AR/VR for construction training and inspection.</p></div>
+        <div class="tile"><h3>AI for Construction Education</h3><p>Adaptive learning for AEC students.</p></div>
+        <div class="tile"><h3>Human–Building Interaction</h3><p>LLMs and IoT sensing for occupants.</p></div>
+        <div class="tile"><h3>Digital Twins &amp; BIM</h3><p>Real-time twin intelligence.</p></div>
+        <div class="tile"><h3>Edge AI &amp; Sensing</h3><p>On-site inference at the edge.</p></div>
+        <div class="tile"><h3>Multimodal LLMs for AEC</h3><p>Document and vision-language intelligence.</p></div>
+        <div class="tile"><h3>Human–Robot Collaboration</h3><p>LLM-guided collaboration on job sites.</p></div>
+        <div class="tile"><h3>Blockchain &amp; DAOs</h3><p>Decentralized systems for smart buildings.</p></div>
       </div>
     </div>
+  </section>
 
-  </div>
-  <footer><div class="fl"><span>BUILT</span> LAB · Eastern Illinois University</div><div class="fr">© 2025 BUILT Lab — AI for the Built Environment</div></footer>
-</section>
+  <section>
+    <div class="container">
+      <div class="section-head" style="text-align:left; max-width:820px; margin-left:0;">
+        <span class="eyebrow">// About the Lab</span>
+        <h2>Who we are</h2>
+      </div>
+      <p style="max-width:820px; font-size:1.02rem;">The <strong>BUILT Lab</strong> (Built Environment Intelligent Systems Lab) is a research group at <strong>Eastern Illinois University</strong> dedicated to transforming how humans design, build, operate, and experience the built environment through artificial intelligence. We sit at the intersection of construction engineering, computer science, and human factors — producing work that is both theoretically rigorous and immediately deployable in real buildings, on construction sites, and in classrooms.</p>
+      <p style="max-width:820px;">Our research spans XR for construction training and inspection, AI-powered adaptive learning for construction engineering students, human–building interaction via LLMs and IoT sensing, real-time digital twins powered by edge AI, multimodal LLMs for AEC document intelligence, LLM-guided human–robot collaboration on job sites, and blockchain-based decentralized autonomous systems for smart building management.</p>
+      <div class="chips" style="max-width:820px; margin-top:18px;">
+        <span class="chip">XR + AR/VR</span><span class="chip">Digital Twins</span><span class="chip">Edge AI</span>
+        <span class="chip">Multimodal LLMs</span><span class="chip">Construction Education</span>
+        <span class="chip">Human–Building Interaction</span><span class="chip">Human–Robot Collaboration</span>
+        <span class="chip">Blockchain / DAO</span><span class="chip">BIM Intelligence</span><span class="chip">Smart Buildings</span>
+      </div>
+    </div>
+  </section>
 
-<!-- ════════════════ TEAM ════════════════ -->
-<section class="section" id="team">
-  <div class="page-header">
-    <div class="pg-tag">// 04 — Team</div>
-    <div class="pg-title">People</div>
-    <p class="pg-sub">Researchers and collaborators building intelligent systems for the built environment at Eastern Illinois University.</p>
-  </div>
-  <div class="content">
-
-    <div class="sec-hd"><h2>Principal Investigator</h2></div>
-    <div style="max-width:580px;margin-bottom:3rem">
-      <div class="tc">
-        <div style="display:flex;gap:1rem;align-items:center">
-          <div class="avatar av1">RL</div>
+  <section class="tint">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">News</span>
+        <h2>2026 updates</h2>
+      </div>
+      <div class="timeline">
+        <div class="t-item">
+          <div class="t-date">2026 · Apr</div>
           <div>
-            <div class="tname">Reachsak Ly</div>
-            <div class="trole">Assistant Professor · School of Technology · Eastern Illinois University</div>
+            <span class="t-tag">Funding</span>
+            <h3>Redden Grant Awarded — EIU</h3>
+            <p>Awarded the 2026 Redden Grant ($2,500) for "Generative AI-Powered Human-Robot Collaboration Demonstration for Construction Technology Education."</p>
           </div>
         </div>
-        <div class="tbio">
-          Reachsak Ly is an Assistant Professor in the School of Technology at Eastern Illinois University. His research focuses on AI for the built environment, spanning LLM-based smart building systems, digital twins, edge AI, extended reality (XR), blockchain-based decentralized autonomous organizations (DAOs), and GenAI-powered human–robot collaboration for construction technology education.
+        <div class="t-item">
+          <div class="t-date">2025 · Apr</div>
+          <div>
+            <span class="t-tag">IP Disclosure</span>
+            <h3>Two Virginia Tech IP Disclosures Approved</h3>
+            <p>DAB-CPS (INV2025-123) and LLM-Based Autonomous Building Operations (INV2025-121) approved, covering foundational systems from our research.</p>
+          </div>
         </div>
-        <div class="tag-list">
-          <span class="tag">LLM + Smart Buildings</span>
-          <span class="tag">Digital Twin</span>
-          <span class="tag">Edge AI</span>
-          <span class="tag">XR</span>
-          <span class="tag">Blockchain / DAO</span>
-          <span class="tag">Human–Robot Collab</span>
-          <span class="tag">Construction AI</span>
+        <div class="t-item">
+          <div class="t-date">2025 · Jun</div>
+          <div>
+            <span class="t-tag">Conference</span>
+            <h3>Paper Accepted at ACM FSE 2025 — Trondheim, Norway</h3>
+            <p>"Smart Building Operations and Virtual Assistants Using LLM" accepted to the 33rd ACM Symposium on the Foundations of Software Engineering.</p>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="sec-hd"><h2>Collaborators &amp; Research Partners</h2></div>
-    <div class="g3" style="margin-bottom:3rem">
-      <div class="card"><h3>Alireza Shojaei</h3><p>Associate Professor, Virginia Tech. Collaborator on blockchain, digital twin, DAO, and construction education research.</p><div class="card-meta"><span>Virginia Tech</span></div></div>
-      <div class="card"><h3>Abiola Akanmu</h3><p>Collaborator on autonomous building cyber-physical systems and decentralized facilities management research.</p><div class="card-meta"><span>Virginia Tech</span></div></div>
-      <div class="card"><h3>Xinghua Gao</h3><p>Collaborator on LLM-based smart building operations, digital twins, and DAO governance research.</p><div class="card-meta"><span>Virginia Tech</span></div></div>
-      <div class="card"><h3>Philip Agee</h3><p>Collaborator on autonomous building cyber-physical systems and decentralized facilities management research.</p><div class="card-meta"><span>Virginia Tech</span></div></div>
-      <div class="card"><h3>Hossein Naderi</h3><p>Collaborator on blockchain-enabled construction safety incentives and digital twin data exchange frameworks.</p><div class="card-meta"><span>Virginia Tech</span></div></div>
-      <div class="card"><h3>Saeed Rokooei</h3><p>Collaborator on faculty development programs and virtual site visits in construction management education.</p><div class="card-meta"><span>Mississippi State</span></div></div>
-    </div>
-
-  </div>
-  <footer><div class="fl"><span>BUILT</span> LAB · Eastern Illinois University</div><div class="fr">© 2025 BUILT Lab — AI for the Built Environment</div></footer>
-</section>
-
-<!-- ════════════════ NEWS ════════════════ -->
-<section class="section" id="news">
-  <div class="page-header">
-    <div class="pg-tag">// 05 — News</div>
-    <div class="pg-title">Lab Updates</div>
-    <p class="pg-sub">Awards, publications, presentations, and milestones from the BUILT Lab.</p>
-  </div>
-  <div class="content">
-
-    <div class="news-item">
-      <div style="text-align:center"><div class="nday">Apr</div><div class="nmo">2025</div></div>
-      <div><span class="nbadge">IP Disclosure</span><div class="ntitle">Two Virginia Tech IP Disclosures Approved</div><div class="ntext">Two invention disclosures approved by Virginia Tech in April 2025 — DAB-CPS (INV2025-123) and LLM-Based Autonomous Building Operations (INV2025-121) — covering foundational systems developed through BUILT Lab research.</div></div>
-    </div>
-
-    <div class="news-item">
-      <div style="text-align:center"><div class="nday">2026</div><div class="nmo">Grant</div></div>
-      <div><span class="nbadge">Funding</span><div class="ntitle">Redden Grant Awarded — EIU</div><div class="ntext">Awarded the 2026 Redden Grant ($2,500) at Eastern Illinois University for the project "Generative AI-Powered Human-Robot Collaboration Demonstration for Construction Technology Education."</div></div>
-    </div>
-
-    <div class="news-item">
-      <div style="text-align:center"><div class="nday">2025</div><div class="nmo">Conf</div></div>
-      <div><span class="nbadge">Conference</span><div class="ntitle">Paper Accepted at ACM FSE 2025 — Trondheim, Norway</div><div class="ntext">Our paper "Smart Building Operations and Virtual Assistants Using LLM" has been accepted to the 33rd ACM Symposium on the Foundations of Software Engineering (FSE 2025), June 23–27, Trondheim, Norway.</div></div>
-    </div>
-
-    <div class="news-item">
-      <div style="text-align:center"><div class="nday">2025</div><div class="nmo">Poster</div></div>
-      <div><span class="nbadge">Award</span><div class="ntitle">Poster at Torgersen Graduate Student Research Excellence Award — Virginia Tech</div><div class="ntext">Presented "Autonomous Building Operations and Virtual Assistants Using Generative AI" as part of the prestigious 2025 Paul E. Torgersen Graduate Student Research Excellence Award at Virginia Tech, Blacksburg, VA.</div></div>
-    </div>
-
-    <div class="news-item">
-      <div style="text-align:center"><div class="nday">2025</div><div class="nmo">Journal</div></div>
-      <div><span class="nbadge">Publication</span><div class="ntitle">Journal Article Published in IS&amp;eBM — Decentralized Autonomous Organizations in Built Environments</div><div class="ntext">Our paper on DAOs in the built environment — exploring applications, potentials, and limitations — was published in Information Systems and eBusiness Management Journal (2025).</div></div>
-    </div>
-
-    <div class="news-item">
-      <div style="text-align:center"><div class="nday">2024</div><div class="nmo">Conf</div></div>
-      <div><span class="nbadge">Conference</span><div class="ntitle">Two Papers Presented at Construction Research Congress 2024 — ASCE</div><div class="ntext">BUILT Lab presented two papers at CRC 2024 in Des Moines, Iowa: the DT-DAO integration framework for smart building FM and the NFT-powered data exchange framework for AEC digital twins.</div></div>
-    </div>
-
-    <div class="news-item">
-      <div style="text-align:center"><div class="nday">2023</div><div class="nmo">Journal</div></div>
-      <div><span class="nbadge">Publication</span><div class="ntitle">Blockchain-Based Construction Safety Paper Published in Automation in Construction</div><div class="ntext">Our paper on autonomous construction safety incentive mechanisms using blockchain-enabled tokens and vision-based techniques was published in Automation in Construction (Vol. 153, 2023).</div></div>
-    </div>
-
-  </div>
-  <footer><div class="fl"><span>BUILT</span> LAB · Eastern Illinois University</div><div class="fr">© 2025 BUILT Lab — AI for the Built Environment</div></footer>
-</section>
-
-<!-- ════════════════ CONTACT ════════════════ -->
-<section class="section" id="contact">
-  <div class="page-header">
-    <div class="pg-tag">// 06 — Contact</div>
-    <div class="pg-title">Get in Touch</div>
-    <p class="pg-sub">We'd love to connect — reach out for collaborations, questions, or to learn more about our work.</p>
-  </div>
-  <div class="content">
-    <div class="contact-wrap">
-      <div>
-        <div class="ch3">Lab Information</div>
-        <div class="cl"><div class="ci">📍</div><div class="cinfo"><strong>Address</strong>School of Technology<br>Eastern Illinois University<br>Charleston, IL 61920</div></div>
-        <div class="cl"><div class="ci">✉️</div><div class="cinfo"><strong>Email</strong>rly@eiu.edu</div></div>
-        <div class="cl"><div class="ci">🔗</div><div class="cinfo"><strong>GitHub</strong>github.com/built-lab</div></div>
-        <div class="cl"><div class="ci">🎓</div><div class="cinfo"><strong>Google Scholar</strong>scholar.google.com/[profile]</div></div>
-      </div>
-
-      <div>
-        <div class="ch3">Send a Message</div>
-        <div class="fg"><label>Your Name</label><input type="text" placeholder="Your Name"/></div>
-        <div class="fg"><label>Email</label><input type="email" placeholder="your@email.com"/></div>
-        <div class="fg"><label>Subject</label><input type="text" placeholder="Collaboration / Question / Other"/></div>
-        <div class="fg"><label>Message</label><textarea placeholder="Tell us about yourself and how you'd like to connect..."></textarea></div>
-        <button class="btn btn-primary" style="width:100%" onclick="sendEmail()">Send Message →</button>
+      <div style="text-align:center; margin-top:32px;">
+        <a class="btn ghost" href="news.html">All lab news →</a>
       </div>
     </div>
+  </section>
+
+  <section class="cta">
+    <div class="container">
+      <span class="eyebrow">Contact</span>
+      <h2>Let's build the BUILT Lab in public.</h2>
+      <a class="btn primary" href="contact.html">Contact Page</a>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="container foot-row">
+    <span class="brand">BUILT Lab · Eastern Illinois University</span>
+    <span class="fine">© 2026 BUILT Lab — AI for the Built Environment</span>
   </div>
-  <footer><div class="fl"><span>BUILT</span> LAB · Eastern Illinois University</div><div class="fr">© 2025 BUILT Lab — AI for the Built Environment</div></footer>
-</section>
+</footer>
 
-<script>
-function show(id){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.getElementById('nav-'+id).classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function toggleTheme(){
-  const html=document.documentElement;
-  const isDark=html.getAttribute('data-theme')==='dark';
-  html.setAttribute('data-theme',isDark?'light':'dark');
-  document.getElementById('themeIcon').textContent=isDark?'🌙':'☀️';
-  document.getElementById('themeLabel').textContent=isDark?'Dark Mode':'Light Mode';
-}
-
-function sendEmail(){
-  const name=document.querySelector('input[placeholder="Your Name"]').value;
-  const email=document.querySelector('input[placeholder="your@email.com"]').value;
-  const subject=document.querySelector('input[placeholder="Collaboration / Question / Other"]').value;
-  const body=document.querySelector('textarea').value;
-  const mailto=`mailto:rly@eiu.edu?subject=${encodeURIComponent(subject||'BUILT Lab Inquiry')}&body=${encodeURIComponent(`From: ${name} (${email})\n\n${body}`)}`;
-  window.location.href=mailto;
-}
-</script>
 </body>
 </html>
