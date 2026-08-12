@@ -116,15 +116,10 @@ header.site {
   width: 34px;
   height: 34px;
   border-radius: 8px;
-  background: var(--accent);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--sans);
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.02em;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  flex: none;
 }
 
 nav.tabs {
